@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode//用于后期的去重使用
 public class Book {
+
     //id
     private Long id;
     //书名

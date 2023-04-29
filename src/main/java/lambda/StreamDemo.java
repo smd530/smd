@@ -1,5 +1,6 @@
 package lambda;
 
+import com.google.common.collect.Lists;
 import lambda.Author;
 import lambda.Book;
 
@@ -58,8 +59,99 @@ public class StreamDemo {
 //        userFlatMap(authors);
 
         // 拿到所有数据的分类 对分类进行去重 不能出现：哲学,爱情
-        getCategory(authors);
+//        getCategory(authors);
 
+        // 统计所有作家的书并去重
+//        getAllBookDistinct(authors);
+
+        // 分别获取这些作家所出书籍的最高分和最低分
+//        getBooksMaxScoreAndMinScore(authors);
+
+        // 获取一个存放所有作者名字的List集合
+//        getAuthorNameList(authors);
+
+        // 获取一个所有书名的Set集合
+//        getBookNameSet(authors);
+
+        // 获取一个map map的key为作者名 value为List<Book> 参数是两个Function
+//        getAuthorNameBookListMap(authors);
+
+    }
+
+    /**
+     * 获取一个map map的key为作者名 value为List<Book> 参数是两个Function
+     * @param authors
+     */
+    private static void getAuthorNameBookListMap(List<Author> authors) {
+        Map<String, List<Book>> nameBookListMap = authors.stream()
+                .distinct()
+                .collect(Collectors.toMap(Author::getName, Author::getBooks));
+        for (Map.Entry<String, List<Book>> stringListEntry : nameBookListMap.entrySet()) {
+            System.out.println(stringListEntry.getKey());
+            System.out.println(stringListEntry.getValue().toString());
+        }
+    }
+
+    /**
+     * 获取一个所有书名的Set集合
+     * @param authors
+     */
+    private static void getBookNameSet(List<Author> authors) {
+        Set<String> bookNameSet = authors.stream()
+                .flatMap((Function<Author, Stream<Book>>) author -> author.getBooks().stream())
+                .map(Book::getName)
+                .collect(Collectors.toSet());
+        for (String bookName : bookNameSet) {
+            System.out.println(bookName);
+        }
+    }
+
+    /**
+     * 获取一个存放所有作者名字的List集合
+     * @param authors
+     */
+    private static void getAuthorNameList(List<Author> authors) {
+        List<String> authorName = authors.stream()
+                .map(Author::getName)
+                .collect(Collectors.toList());
+        for (String name: authorName) {
+            System.out.println(name);
+        }
+    }
+
+    /**
+     * 分别获取这些作家所出书籍的最高分和最低分
+     * ****
+     * ****
+     * 一个流经过一次终结操作之后就关闭了
+     * 想要另一个终结操作需要再创建一个流
+     * @param authors
+     */
+    private static void getBooksMaxScoreAndMinScore(List<Author> authors) {
+        Optional<Integer> max = authors.stream()
+                .flatMap((Function<Author, Stream<Book>>) author -> author.getBooks().stream())
+                .map(Book::getScore)
+                .max((o1, o2) -> o1 - o2);
+
+        Optional<Integer> min = authors.stream()
+                .flatMap((Function<Author, Stream<Book>>) author -> author.getBooks().stream())
+                .map(Book::getScore)
+                .min((o1, o2) -> o1 - o2);
+        max.ifPresent(System.out::println);
+        min.ifPresent(System.out::println);
+    }
+
+
+    /**
+     * 统计所有作家的书并去重
+     * @param authors
+     */
+    private static void getAllBookDistinct(List<Author> authors) {
+        long count = authors.stream()
+                .flatMap((Function<Author, Stream<Book>>) author -> author.getBooks().stream())
+                .distinct()
+                .count();
+        System.out.println(count);
     }
 
     /**
