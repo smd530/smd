@@ -3,6 +3,7 @@ package lambda;
 import com.google.common.collect.Lists;
 import lambda.Author;
 import lambda.Book;
+import lombok.val;
 
 import java.util.*;
 import java.util.function.BinaryOperator;
@@ -81,9 +82,51 @@ public class StreamDemo {
 //        getAuthorAgeGreatThan29(authors);
 
         // 用Reduce 归并 对所有作家年龄求和
-        getAuthorAgeSum(authors);
+//        getAuthorAgeSum(authors);
+
+        // 使用reduce求所有作家中年龄的最大值
+//        getMaxAgeByReduce(authors);
+
+        // 使用reduce求所有作中年龄的最小值
+//        getMinAgeByReduce(authors);
+
+        // 用一个参数的reduce来求年龄的最小值
+//        getMinAgeByReduceOnlyOneArgs(authors);
 
 
+    }
+
+    /**
+     * 用一个参数的reduce来求年龄的最小值
+     * @param authors
+     */
+    private static void getMinAgeByReduceOnlyOneArgs(List<Author> authors) {
+        Optional<Integer> reduce = authors.stream()
+                .map(Author::getAge)
+                .reduce((result, element) -> result < element ? result : element);
+        reduce.ifPresent(System.out::println);
+    }
+
+    /**
+     * 使用reduce求所有作中年龄的最小值
+     * @param authors
+     */
+    private static void getMinAgeByReduce(List<Author> authors) {
+        Integer min = authors.stream()
+                .map(Author::getAge)
+                .reduce(Integer.MAX_VALUE, (result, element) -> result < element ? result : element);
+        System.out.println(min);
+    }
+
+    /**
+     * 使用reduce求所有作家中年龄的最大值
+     * @param authors
+     */
+    private static void getMaxAgeByReduce(List<Author> authors) {
+        Integer max = authors.stream()
+                .map(Author::getAge)
+                .reduce(Integer.MIN_VALUE, (result, element) -> result < element ? element : result);
+        System.out.println(max);
 
     }
 
