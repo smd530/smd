@@ -5,6 +5,7 @@ import lambda.Author;
 import lambda.Book;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -76,6 +77,36 @@ public class StreamDemo {
         // 获取一个map map的key为作者名 value为List<Book> 参数是两个Function
 //        getAuthorNameBookListMap(authors);
 
+        // 是否有年龄在29岁以上的作家
+//        getAuthorAgeGreatThan29(authors);
+
+        // 用Reduce 归并 对所有作家年龄求和
+        getAuthorAgeSum(authors);
+
+
+
+    }
+
+    /**
+     * map reduce模式
+     * @param authors
+     */
+    private static void getAuthorAgeSum(List<Author> authors) {
+
+        Integer sum = authors.stream()
+                .map(Author::getAge)
+                .reduce(0, (result, element) -> result + element);
+        System.out.println(sum);
+
+    }
+
+    /**
+     * 是否有年龄在29岁以上的作家 anyMatch
+     * @param authors
+     */
+    private static void getAuthorAgeGreatThan29(List<Author> authors) {
+        boolean b = authors.stream().anyMatch(author -> author.getAge() > 29);
+        System.out.println(b);
     }
 
     /**
