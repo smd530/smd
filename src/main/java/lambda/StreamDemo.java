@@ -6,10 +6,7 @@ import lambda.Book;
 import lombok.val;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -93,6 +90,30 @@ public class StreamDemo {
         // 用一个参数的reduce来求年龄的最小值
 //        getMinAgeByReduceOnlyOneArgs(authors);
 
+        // 基本数据联系操作优化 mapToInt
+//        authors.stream().map(Author::getAge)
+//                .map(age -> age + 10)
+//                .filter(age -> age > 18)
+//                .map(age -> age + 2)
+//                .forEach(System.out::println);
+//
+//        authors.stream().mapToInt(value -> value.getAge())
+//                .filter(value -> value > 18)
+//                .map(age -> age + 2)
+//                .forEach(System.out::println);
+
+        // 并行流 操作大数据量 并行流就是把任务分配给多个线程去处理
+        Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+//        Integer sum = stream.parallel().filter(num -> num > 5)
+//                .reduce(Integer::sum).get();
+//        System.out.println(sum);
+
+        Integer sum = stream
+                .parallel()
+                .peek(integer -> System.out.println(integer + "." + Thread.currentThread().getName())).filter(num -> num > 5)
+                .reduce(Integer::sum)
+                .get();
+        System.out.println(sum);
 
     }
 
@@ -330,7 +351,9 @@ public class StreamDemo {
                 .map((author) -> {
             return author.getName();})
                 .collect(Collectors.toList());
-        for (String s : collect) System.out.println(s);
+        for (String s : collect) {
+            System.out.println(s);
+        }
     }
 
     /**
