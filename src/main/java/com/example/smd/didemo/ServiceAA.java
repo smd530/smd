@@ -3,10 +3,10 @@ package com.example.smd.didemo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class ServiceAA {
 
-    @Autowired
+//    @Autowired
     private ServiceBB serviceBB;
 
     public void setServiceBB (ServiceBB serviceBB) {
